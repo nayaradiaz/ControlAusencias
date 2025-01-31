@@ -11,5 +11,8 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
-
-require __DIR__.'/auth.php';
+    //Ruta view registro de ausencias
+Route::view('registerAbsences', 'registerAbsences')
+    ->middleware(['auth'])
+    ->name('registerAbsences');
+require __DIR__ . '/auth.php';

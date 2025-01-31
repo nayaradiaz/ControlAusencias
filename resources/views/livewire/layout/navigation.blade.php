@@ -28,10 +28,26 @@ new class extends Component
                     </a>
                 </div>
 
+                @if(auth()->check() && auth()->user()->hasRole('Admin'))
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <!-- Enlace en la barra de navegación (sin $emit aquí) -->
+                    <x-nav-link :href="route('register')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('Administrar Usuarios') }}
+                    </x-nav-link>
+                </div>
+                @endif
+
+
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('registerAbsences')" :active="request()->routeIs('registerAbsences')" wire:navigate>
+                        {{ __('Administrar Ausencias') }}
+                    </x-nav-link>
+                </div>
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                        {{ __('Faltas Comunicadas') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -82,7 +98,17 @@ new class extends Component
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
+                {{ __('Administrar Usuarios') }}
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('Administrar Ausencias') }}
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('Ausencias') }}
             </x-responsive-nav-link>
         </div>
 
