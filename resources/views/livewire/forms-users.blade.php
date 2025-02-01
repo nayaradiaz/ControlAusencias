@@ -1,72 +1,66 @@
-<div class="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-lg">
-    <!-- Mostrar mensajes de error en la parte superior -->
-    @if($errors->any())
-    <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
-        <ul>
-            @foreach($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-    @endif
+<div>
+    <h2 class="text-center text-2xl font-semibold mt-4 ">Registrar Profesores</h2>
+    <div class="max-w-xl mx-auto bg-white shadow-xl rounded-lg p-6">
+        <form wire:submit.prevent="registerUser" >
 
-    <!-- Mostrar mensajes de éxito en la parte superior -->
-    @if(session()->has('success'))
-    <div class="bg-green-500 text-white p-4 rounded-lg mb-6">
-        <ul>
-            <li>{{ session('success') }}</li>
-        </ul>
-    </div>
-    @endif
-    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Registrar Profesor</h2>
+            <!-- Nombre -->
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 font-bold mb-2">Nombre</label>
+                <input type="text" wire:model="name" id="name" class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
+                @error('name') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
+            </div>
 
+            <!-- Apellidos -->
+            <div class="mb-4">
+                <label for="surnames" class="block text-gray-700 font-bold mb-2">Apellidos</label>
+                <input type="text" wire:model="surnames" id="surnames" class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
+                @error('surnames') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
+            </div>
 
+            <!-- Email -->
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-bold mb-2">Correo Electrónico</label>
+                <input type="email" wire:model="email" id="email" class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
+                @error('email') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
+            </div>
 
-    <!-- Contenedor con dos columnas para dispositivos de escritorio -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Formulario de registro de profesor -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-            <form wire:submit.prevent="registerUser">
-                <!-- Campo de nombre -->
-                <input type="text" wire:model="name" placeholder="Nombre" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-                <!-- Campo de apellidos -->
-                <input type="text" wire:model="surnames" placeholder="Apellidos" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-                <!-- Campo de correo electrónico -->
-                <input type="email" wire:model="email" placeholder="Correo electrónico" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-
-                <!-- Select para departamento -->
-                <select wire:model="department_id" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="">Seleccione un departamento</option>
-                    @foreach($departments as $department)
+            <!-- Departamento -->
+            <div class="mb-4">
+                <label for="department_id" class="block text-gray-700 font-bold mb-2">Departamento</label>
+                <select wire:model="department_id" id="department_id" class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
+                    <option value="">Seleccionar Departamento</option>
+                    @foreach ($departments as $department)
                     <option value="{{ $department->id }}">{{ $department->name }}</option>
                     @endforeach
                 </select>
+                @error('department_id') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
+            </div>
 
-                <!-- Botón de submit -->
-                <button type="submit" class="w-full p-3 mt-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Registrar</button>
-            </form>
+            <!-- Botón de registro -->
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition">
+                Registrar Usuario
+            </button>
 
-        </div>
 
-        <!-- Formulario de carga de CSV -->
-        <div class="bg-white p-6 rounded-lg shadow-lg">
+        </form>
+
+        <!-- Carga de CSV -->
+        <div class="mt-6">
             <form wire:submit.prevent="uploadCsv" enctype="multipart/form-data">
-                <div class="mb-6">
-                    <label for="csv_file" class="block text-lg font-medium text-gray-700">Subir archivo CSV:</label>
-                    <input type="file" id="csv_file" wire:model="csv_file" accept=".csv" class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
+                <input type="file" wire:model="csv_file" class="w-full p-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-300">
+                @error('csv_file') <p class="text-red-600 mt-1">{{ $message }}</p> @enderror
 
-                <button type="submit" class="w-full p-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Subir Archivo
+                <button type="submit" class="w-full mt-2 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition">
+                    Subir CSV
                 </button>
+
+                <!-- Mensaje de éxito -->
+                @if (session()->has('success'))
+                <p class="mt-4 text-green-600">{{ session('success') }}</p>
+                @endif
             </form>
-
-
         </div>
-
-    </div> <!-- Fin del grid -->
+    </div>
+    <br>
 
 </div>

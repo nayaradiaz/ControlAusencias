@@ -13,13 +13,28 @@ return new class extends Migration
     {
         Schema::create('absences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relación con users
-            $table->date('date'); // Fecha de la ausencia
-            $table->string('time_slot'); // Tramo horario
-            $table->text('comments')->nullable(); // Comentarios opcionales
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+            $table->date('date'); 
+            $table->text('comments')->nullable(); 
+            $table->enum('time_slot', [
+                'mañana_1',
+                'mañana_2',
+                'mañana_3',
+                'recreo_1',
+                'mañana_4',
+                'mañana_5',
+                'mañana_6',
+                'tarde_1',
+                'tarde_2',
+                'tarde_3',
+                'recreo_2',
+                'tarde_4',
+                'tarde_5',
+                'tarde_6'
+                
+            ]);
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -27,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('absences');
     }
 };

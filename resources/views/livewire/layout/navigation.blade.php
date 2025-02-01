@@ -39,17 +39,19 @@ new class extends Component
 
 
                 <!-- Navigation Links -->
+                @if(auth()->check() && auth()->user()->hasRole('Admin'))
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('registerAbsences')" :active="request()->routeIs('registerAbsences')" wire:navigate>
                         {{ __('Administrar Ausencias') }}
                     </x-nav-link>
                 </div>
-                <!-- Navigation Links -->
+                @endif
+                <!-- Navigation Links
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Faltas Comunicadas') }}
                     </x-nav-link>
-                </div>
+                </div> -->
             </div>
 
             <!-- Settings Dropdown -->
