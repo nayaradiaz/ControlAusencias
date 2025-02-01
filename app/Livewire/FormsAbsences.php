@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Absence;
+use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
@@ -10,14 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class FormsAbsences extends Component
 {
-    public $timeSlots, $absenceId, $timeSlot, $comments, $date, $turnoHora, $users, $userId;
+    public $departments, $timeSlots, $absenceId, $timeSlot, $comments, $date, $turnoHora, $users, $userId, $department_id;
 
-    protected $rules = [
-        'userId' => 'required|exists:users,id',
-        'timeSlot' => 'required|in:mañana_1,mañana_2,mañana_3,recreo_1,mañana_4,mañana_5,mañana_6,tarde_1,tarde_2,tarde_3,recreo_2,tarde_4,tarde_5,tarde_6',
-        'comments' => 'nullable|string|max:500',
-        'date' => 'required|date',
-    ];
+ 
 
     protected function messages()
     {
@@ -35,6 +31,7 @@ class FormsAbsences extends Component
     public function mount()
     {
         $this->users = User::all();
+        $this->departments = Department::all();  // Cargar departamentos
         $this->timeSlots = $this->getTimeSlots();
         $this->date = Carbon::today()->toDateString();
         $this->turnoHora = null;
@@ -87,19 +84,29 @@ class FormsAbsences extends Component
 
     public function store()
     {
-        $this->validate();
-
+        // Verificar el valor del departamento
+        // dd($this->department_id);  // Muestra el valor del departamento en la consola
+    
+        $this->validate([
+            'userId' => 'required|exists:users,id',
+            'timeSlot' => 'required|in:mañana_1,mañana_2,mañana_3,recreo_1,mañana_4,mañana_5,mañana_6,tarde_1,tarde_2,tarde_3,recreo_2,tarde_4,tarde_5,tarde_6',
+            'comments' => 'nullable|string|max:500',
+            'date' => 'required|date',
+            'department_id' => 'nullable|exists:departments,id',
+        ]);
+    
         Absence::create([
             'user_id' => $this->userId,
-            'date' => now()->toDateString(),
+            'date' => $this->date,
             'time_slot' => $this->timeSlot,
             'comments' => $this->comments,
+            'department_id' => $this->department_id,  // Este valor debe estar aquí
         ]);
-
+    
         session()->flash('message', '✅ Ausencia registrada exitosamente.');
         $this->resetForm();
     }
-
+    
     public function resetForm()
     {
         $this->userId = null;
@@ -120,7 +127,8 @@ class FormsAbsences extends Component
         }
 
         $absences = $this->getAbsencesForToday();
+        $departments = Department::all();  // Cargar los departamentos
 
-        return view('livewire.forms-absences', compact('absences'));
+        return view('livewire.forms-absences', compact('absences', 'departments'));  // Pasar $departments a la vista
     }
 }

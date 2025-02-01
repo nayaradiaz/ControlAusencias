@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('absences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->date('date'); 
-            $table->text('comments')->nullable(); 
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('date');
+            $table->text('comments')->nullable();
+            $table->foreignId('department_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('time_slot', [
                 'mañana_1',
                 'mañana_2',
@@ -31,7 +32,7 @@ return new class extends Migration
                 'tarde_4',
                 'tarde_5',
                 'tarde_6'
-                
+
             ]);
             $table->timestamps();
         });

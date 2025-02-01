@@ -23,4 +23,8 @@ class Department extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function absences()
+    {
+        return $this->hasMany(Absence::class);  // Relación inversa
+    }
 }
