@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Mail\MailerCreateAbsences;
 use App\Models\Absence;
 use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UserAbsences extends Component
 {
@@ -93,7 +95,6 @@ class UserAbsences extends Component
         'department_id' => 'required|exists:departments,id',
     ]);
 
-    // 📌 Mostrar los datos antes de guardar
   
     // Crear la ausencia
     Absence::create([
@@ -103,6 +104,15 @@ class UserAbsences extends Component
         'department_id' => $this->department_id,
         'time_slot' => $this->timeSlot,
     ]);
+    $absenceData = [
+        'user' => User::find($this->userId)->name,
+        'department' => Department::find($this->department_id)->name ?? 'No asignado',
+        'date' => $this->date,
+        'timeSlot' => $this->getTimeSlots()[$this->timeSlot],
+        'comments' => $this->comments ?? 'Ninguno',
+    ];
+    Mail::to('nayinformatica1smr.1@gmail.com')->send(new MailerCreateAbsences($absenceData));
+
 
     session()->flash('message', '✅ Ausencia registrada exitosamente.');
     $this->resetForm();
