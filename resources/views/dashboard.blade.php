@@ -8,7 +8,6 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <h1>Bienvenido al Dashboard</h1>
-        <p>Contenido de la vista...</p>
+        @livewire('AbsenceOverview')
         </div>
 </x-app-layout>
