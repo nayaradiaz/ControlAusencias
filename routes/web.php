@@ -11,8 +11,13 @@ Route::view('dashboard', 'dashboard')
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
-    //Ruta view registro de ausencias
-Route::view('registerAbsences', 'registerAbsences')
+Route::view('viewAbsences', 'viewAbsences')
     ->middleware(['auth'])
-    ->name('registerAbsences');
+    ->name('viewAbsences');
+Route::view('viewUser', 'viewUser')
+    ->middleware(['auth'])
+    ->name('viewUser');
+    Route::view('viewMyAbsences', 'viewMyAbsences')
+    ->middleware(['auth'])
+    ->name('viewMyAbsences');
 require __DIR__ . '/auth.php';

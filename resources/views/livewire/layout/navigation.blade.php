@@ -27,11 +27,17 @@ new class extends Component
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
+                <!-- Navigation Links -->
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('Inicio') }}
+                    </x-nav-link>
+                </div>
 
                 @if(auth()->check() && auth()->user()->hasRole('Admin'))
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <!-- Enlace en la barra de navegación (sin $emit aquí) -->
-                    <x-nav-link :href="route('register')" :active="request()->routeIs('dashboard')" wire:navigate>
+                    <x-nav-link :href="route('viewUser')" :active="request()->routeIs('viewUser')" wire:navigate>
                         {{ __('Administrar Usuarios') }}
                     </x-nav-link>
                 </div>
@@ -41,17 +47,19 @@ new class extends Component
                 <!-- Navigation Links -->
                 @if(auth()->check() && auth()->user()->hasRole('Admin'))
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('registerAbsences')" :active="request()->routeIs('registerAbsences')" wire:navigate>
+                    <x-nav-link :href="route('viewAbsences')" :active="request()->routeIs('viewAbsences')" wire:navigate>
                         {{ __('Administrar Ausencias') }}
                     </x-nav-link>
                 </div>
                 @endif
-                <!-- Navigation Links
+                
+                <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Faltas Comunicadas') }}
+                    <x-nav-link :href="route('viewMyAbsences')" :active="request()->routeIs('viewMyAbsences')" wire:navigate>
+                        {{ __('Mis ausencias') }}
                     </x-nav-link>
-                </div> -->
+                </div>
+               
             </div>
 
             <!-- Settings Dropdown -->
@@ -98,22 +106,28 @@ new class extends Component
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+    <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('Inicio') }}
+            </x-responsive-nav-link>
+        </div>
+    <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('viewUser')" :active="request()->routeIs('viewUser')" wire:navigate>
                 {{ __('Administrar Usuarios') }}
             </x-responsive-nav-link>
         </div>
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('registerAbsences')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('viewAbsences')" :active="request()->routeIs('viewAbsences')" wire:navigate>
                 {{ __('Administrar Ausencias') }}
             </x-responsive-nav-link>
         </div>
+        
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Ausencias') }}
+            <x-responsive-nav-link :href="route('viewMyAbsences')" :active="request()->routeIs('viewMyAbsences')" wire:navigate>
+                {{ __('Mis Ausencias') }}
             </x-responsive-nav-link>
         </div>
-
+      
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4">

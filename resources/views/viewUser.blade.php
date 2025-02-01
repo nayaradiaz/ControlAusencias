@@ -8,7 +8,15 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <h1>Bienvenido al Dashboard</h1>
-        <p>Contenido de la vista...</p>
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
+               
+                    @role('Admin')
+                    @livewire('FormsUsers')
+                   
+
+                    @endrole
+                
+            </div>
         </div>
 </x-app-layout>
