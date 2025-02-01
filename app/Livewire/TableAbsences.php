@@ -67,9 +67,9 @@ class TableAbsences extends Component
     public function delete($id)
     {
         $absence = Absence::findOrFail($id);
-        // if ($absence->created_at->diffInMinutes(now()) > 10) {
-        //     session()->flash('error', 'No puedes eliminar la ausencia después de 10 minutos.');
-        //     return;
+        //  if ($absence->created_at->diffInMinutes(now()) > 1) {
+        //      session()->flash('error', 'No puedes eliminar la ausencia después de 10 minutos.');
+        //      return;
         // }
 
         $absence->delete();

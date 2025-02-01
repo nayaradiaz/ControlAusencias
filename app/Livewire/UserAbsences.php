@@ -9,35 +9,32 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 
-class FormsAbsences extends Component
+class UserAbsences extends Component
 {
-    public $departments, $timeSlots, $absenceId, $timeSlot, $comments, $date, $turnoHora, $users, $userId, $department_id;
-
- 
+    public $departments, $timeSlots, $absenceId, $timeSlot, $comments, $date, $turnoHora, $userId, $department_id;
 
     protected function messages()
-{
-    return [
-        'userId.required' => '⚠ Debes seleccionar un usuario.',
-        'userId.exists' => '⚠ El usuario seleccionado no es válido.',
-        'timeSlot.required' => '⚠ Selecciona un turno.',
-        'timeSlot.in' => '⚠ El turno seleccionado no es válido.',
-        'comments.max' => '⚠ El comentario no puede superar los 250 caracteres.',
-        'department_id.exists' => '⚠ El departamento seleccionado no es válido.',
-        'department_id.required' => '⚠ Debes seleccionar un departamento.',
-    ];
-}
-
+    {
+        return [
+            'userId.required' => '⚠ Debes seleccionar un usuario.',
+            'userId.exists' => '⚠ El usuario seleccionado no es válido.',
+            'timeSlot.required' => '⚠ Selecciona un turno.',
+            'timeSlot.in' => '⚠ El turno seleccionado no es válido.',
+            'comments.max' => '⚠ El comentario no puede superar los 250 caracteres.',
+            'department_id.exists' => '⚠ El departamento seleccionado no es válido.',
+            'department_id.required' => '⚠ Debes seleccionar un departamento.',
+        ];
+    }
 
     public function mount()
     {
-        $this->users = User::all();
+        // Obtener todos los usuarios
+        $this->userId = Auth::id();
         $this->departments = Department::all();  // Cargar departamentos
         $this->timeSlots = $this->getTimeSlots();
         $this->date = Carbon::today()->toDateString();
         $this->turnoHora = null;
         $this->department_id = null; // Asegúrate de inicializar la propiedad
-
     }
 
     private function getTimeSlots()
@@ -87,34 +84,36 @@ class FormsAbsences extends Component
 
     public function store()
     {
-        // Verificar el valor del departamento
-        // dd($this->department_id);  // Muestra el valor del departamento en la consola
-    
+        // Validación
         $this->validate([
             'userId' => 'required|exists:users,id',
             'timeSlot' => 'required|in:mañana_1,mañana_2,mañana_3,recreo_1,mañana_4,mañana_5,mañana_6,tarde_1,tarde_2,tarde_3,recreo_2,tarde_4,tarde_5,tarde_6',
             'comments' => 'nullable|string|max:250',
             'date' => 'required|date',
-            'department_id' => 'required|nullable|exists:departments,id',
+            'department_id' => 'required|exists:departments,id',
         ]);
-    
+
+       
+        // Creación de la ausencia
         Absence::create([
             'user_id' => $this->userId,
             'date' => $this->date,
-            'time_slot' => $this->timeSlot,
             'comments' => $this->comments,
-            'department_id' => $this->department_id,  // Este valor debe estar aquí
+            'department_id' => $this->department_id,
+            'time_slot' => $this->timeSlot,
         ]);
-    
+
         session()->flash('message', '✅ Ausencia registrada exitosamente.');
         $this->resetForm();
     }
-    
+
+
     public function resetForm()
     {
         $this->userId = null;
         $this->timeSlot = null;
         $this->comments = null;
+        $this->department_id = null;
         $this->turnoHora = null;
     }
 
@@ -125,13 +124,11 @@ class FormsAbsences extends Component
 
     public function render()
     {
-        if (!auth()->user()->hasRole('Admin')) {
-            abort(403);
-        }
+        $userId = Auth::id();
 
         $absences = $this->getAbsencesForToday();
         $departments = Department::all();  // Cargar los departamentos
 
-        return view('livewire.forms-absences', compact('absences', 'departments'));  // Pasar $departments a la vista
+        return view('livewire.user-absences', compact('absences', 'departments', 'userId'));  // Pasar $users a la vista
     }
 }
