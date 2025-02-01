@@ -1,20 +1,22 @@
 <div class="container mx-auto p-4">
     <div class="bg-white shadow-lg rounded-lg p-6">
-        <h1 class="text-2xl font-semibold text-center mb-4">Ausencias para {{ $date->format('l, d F Y') }} - {{ $timeSlot }}</h1>
+    <h1 class="text-2xl font-semibold text-center mb-4">Ausencias para {{ $date->isoFormat('dddd, D [de] MMMM [de] YYYY') }} - {{ $timeSlot }}</h1>
 
-        <table class="min-w-full table-auto">
+
+        <table class="w-full border-collapse border border-gray-300 mt-4 text-center">
             <thead>
-                <tr class="bg-gray-100">
-                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Usuario</th>
-                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Departamento</th>
-                    <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Comentario</th>
+                <tr class="bg-gray-300/80">
+                    <th class="border p-2">Usuario</th>
+                    <th class="border p-2">Departamento</th>
+                    <th class="border p-2">Comentarios</th>
+
                 </tr>
             </thead>
             <tbody>
                 @foreach($absences as $absence)
-                <tr class="border-t">
+                <tr class="border hover:bg-blue-200">
                     <td class="px-4 py-2 text-sm text-gray-800">{{ $absence->user->name }}</td>
-                    <td class="px-4 py-2 text-sm text-gray-800">{{ $absence->department->name }}</td>
+                    <td class="px-4 py-2 text-sm text-gray-800">{{ $absence->department->name ?? 'Sin departamento' }}</td>
                     <td class="px-4 py-2 text-sm text-gray-800">{{ $absence->comments }}</td>
                 </tr>
                 @endforeach

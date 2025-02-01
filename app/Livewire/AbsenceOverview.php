@@ -19,10 +19,14 @@ class AbsenceOverview extends Component
 
     public function mount()
     {
-        $this->date = Carbon::today();
-        $this->timeSlotIndex = 0; // Iniciar con el primer intervalo de tiempo
+        $this->date = Carbon::today()->locale('es');
+        $this->timeSlotIndex = 0; 
         $this->loadAbsences();
         $this->departments = Department::all();
+        $this->absences = Absence::with('department')
+            ->where('date', $this->date)
+            ->where('time_slot', $this->timeSlot)
+            ->get();
     }
 
     // Obtener los intervalos de tiempo
@@ -73,7 +77,7 @@ class AbsenceOverview extends Component
     {
         $this->timeSlot = $this->getTimeSlots()[$this->timeSlotIndex]; // Obtener el intervalo de tiempo actual
         $this->absences = Absence::where('date', $this->date)
-            ->where('time_slot', $this->timeSlot)
+
             ->get();
     }
 
@@ -111,6 +115,10 @@ class AbsenceOverview extends Component
 
     public function render()
     {
-        return view('livewire.absence-overview');
+
+        $absences = $this->loadAbsences();
+        $departments = Department::all();  // Cargar los departamentos
+        $timeSlots = $this->getTimeSlots();
+        return view('livewire.absence-overview', compact('absences', 'departments', 'timeSlots'));
     }
 }

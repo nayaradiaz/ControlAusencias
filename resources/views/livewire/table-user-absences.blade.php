@@ -74,7 +74,7 @@
 
         <table class="w-full border-collapse border border-gray-300 mt-4 text-center">
             <thead>
-                <tr class="bg-gray-200">
+                <tr class="bg-gray-300/80">
                     <th class="border p-2">Usuario</th>
                     <th class="border p-2">Fecha</th>
                     <th class="border p-2">Horario</th>
@@ -85,7 +85,7 @@
             </thead>
             <tbody>
                 @foreach ($absences as $absence)
-                <tr class="border">
+                <tr class="border hover:bg-blue-200">
                     <td class="p-2">{{ $absence->user->name }}</td>
                     <td class="p-2">{{ $absence->date }}</td>
                     <td>
