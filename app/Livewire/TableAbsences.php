@@ -25,10 +25,10 @@ class TableAbsences extends Component
     public function edit($id)
     {
         $absence = Absence::findOrFail($id);
-        if ($absence->created_at->diffInMinutes(now()) > 10) {
-            session()->flash('error', 'No puedes editar la ausencia después de 10 minutos.');
-            return;
-        }
+        // if ($absence->created_at->diffInMinutes(now()) > 10) {
+        //     session()->flash('error', 'No puedes editar la ausencia después de 10 minutos.');
+        //     return;
+        // }
 
         $this->absenceId = $absence->id;
         $this->userId = $absence->user_id;
