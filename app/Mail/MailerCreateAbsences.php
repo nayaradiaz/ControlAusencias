@@ -12,13 +12,15 @@ use Illuminate\Queue\SerializesModels;
 class MailerCreateAbsences extends Mailable
 {
     use Queueable, SerializesModels;
+    public $absenceData;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($absenceData)
     {
-        //
+        $this->absenceData = $absenceData;
+
     }
 
     /**
@@ -27,7 +29,7 @@ class MailerCreateAbsences extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mailer Create Absences',
+            subject: 'Nueva ausencia creada',
         );
     }
 
@@ -37,9 +39,15 @@ class MailerCreateAbsences extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.absence',
         );
     }
+   
+    public function build()
+{
+    return $this->view('emails.absence')
+                ->with('absenceData', $this->absenceData);
+}
 
     /**
      * Get the attachments for the message.

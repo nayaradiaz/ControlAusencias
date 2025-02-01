@@ -2,31 +2,33 @@
 
 namespace App\Livewire;
 
+use App\Mail\MailerCreateAbsences;
 use App\Models\Absence;
 use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class FormsAbsences extends Component
 {
     public $departments, $timeSlots, $absenceId, $timeSlot, $comments, $date, $turnoHora, $users, $userId, $department_id;
 
- 
+
 
     protected function messages()
-{
-    return [
-        'userId.required' => '⚠ Debes seleccionar un usuario.',
-        'userId.exists' => '⚠ El usuario seleccionado no es válido.',
-        'timeSlot.required' => '⚠ Selecciona un turno.',
-        'timeSlot.in' => '⚠ El turno seleccionado no es válido.',
-        'comments.max' => '⚠ El comentario no puede superar los 250 caracteres.',
-        'department_id.exists' => '⚠ El departamento seleccionado no es válido.',
-        'department_id.required' => '⚠ Debes seleccionar un departamento.',
-    ];
-}
+    {
+        return [
+            'userId.required' => '⚠ Debes seleccionar un usuario.',
+            'userId.exists' => '⚠ El usuario seleccionado no es válido.',
+            'timeSlot.required' => '⚠ Selecciona un turno.',
+            'timeSlot.in' => '⚠ El turno seleccionado no es válido.',
+            'comments.max' => '⚠ El comentario no puede superar los 250 caracteres.',
+            'department_id.exists' => '⚠ El departamento seleccionado no es válido.',
+            'department_id.required' => '⚠ Debes seleccionar un departamento.',
+        ];
+    }
 
 
     public function mount()
@@ -87,9 +89,7 @@ class FormsAbsences extends Component
 
     public function store()
     {
-        // Verificar el valor del departamento
-        // dd($this->department_id);  // Muestra el valor del departamento en la consola
-    
+        // Validar los datos
         $this->validate([
             'userId' => 'required|exists:users,id',
             'timeSlot' => 'required|in:mañana_1,mañana_2,mañana_3,recreo_1,mañana_4,mañana_5,mañana_6,tarde_1,tarde_2,tarde_3,recreo_2,tarde_4,tarde_5,tarde_6',
@@ -97,19 +97,36 @@ class FormsAbsences extends Component
             'date' => 'required|date',
             'department_id' => 'required|nullable|exists:departments,id',
         ]);
-    
-        Absence::create([
+
+        // Crear la ausencia
+        $absence = Absence::create([
             'user_id' => $this->userId,
             'date' => $this->date,
             'time_slot' => $this->timeSlot,
             'comments' => $this->comments,
-            'department_id' => $this->department_id,  // Este valor debe estar aquí
+            'department_id' => $this->department_id,
         ]);
-    
-        session()->flash('message', '✅ Ausencia registrada exitosamente.');
+
+        // Preparar los datos para el correo
+        $absenceData = [
+            'user' => User::find($this->userId)->name,
+            'department' => Department::find($this->department_id)->name ?? 'No asignado',
+            'date' => $this->date,
+            'timeSlot' => $this->getTimeSlots()[$this->timeSlot],
+            'comments' => $this->comments ?? 'Ninguno',
+        ];
+
+        Mail::to('nayinformatica1smr.1@gmail.com')->send(new MailerCreateAbsences($absenceData));
+        session()->flash('error', '⚠ Hubo un problema al enviar el correo.');
+
+
+
+        // Mensaje de éxito
+        session()->flash('message', '✅ Ausencia registrada y correo enviado exitosamente.');
         $this->resetForm();
     }
-    
+
+
     public function resetForm()
     {
         $this->userId = null;
