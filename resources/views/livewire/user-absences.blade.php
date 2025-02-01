@@ -1,7 +1,8 @@
 <div>
     <h2 class="text-center text-2xl font-semibold mt-4 ">Registrar Ausencias</h2>
     <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-6">
-        <form >
+   
+    <form wire:submit.prevent="store">
 
             <div class="mb-4">
                 <label for="department_id" class="block text-gray-700 font-bold mb-2">Departamento</label>
@@ -46,7 +47,7 @@
             </div>
 
             <!-- Botón -->
-            <button  wire:click="store" type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition">
+            <button   type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition">
                 Registrar Ausencia
             </button>
 

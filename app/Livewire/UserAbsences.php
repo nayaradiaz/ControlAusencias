@@ -83,29 +83,31 @@ class UserAbsences extends Component
     }
 
     public function store()
-    {
-        // Validación
-        $this->validate([
-            'userId' => 'required|exists:users,id',
-            'timeSlot' => 'required|in:mañana_1,mañana_2,mañana_3,recreo_1,mañana_4,mañana_5,mañana_6,tarde_1,tarde_2,tarde_3,recreo_2,tarde_4,tarde_5,tarde_6',
-            'comments' => 'nullable|string|max:250',
-            'date' => 'required|date',
-            'department_id' => 'required|exists:departments,id',
-        ]);
+{
+    // Validación
+    $this->validate([
+        'userId' => 'required|exists:users,id',
+        'timeSlot' => 'required|in:mañana_1,mañana_2,mañana_3,recreo_1,mañana_4,mañana_5,mañana_6,tarde_1,tarde_2,tarde_3,recreo_2,tarde_4,tarde_5,tarde_6',
+        'comments' => 'nullable|string|max:250',
+        'date' => 'required|date',
+        'department_id' => 'required|exists:departments,id',
+    ]);
 
-       
-        // Creación de la ausencia
-        Absence::create([
-            'user_id' => $this->userId,
-            'date' => $this->date,
-            'comments' => $this->comments,
-            'department_id' => $this->department_id,
-            'time_slot' => $this->timeSlot,
-        ]);
+    // 📌 Mostrar los datos antes de guardar
+  
+    // Crear la ausencia
+    Absence::create([
+        'user_id' => $this->userId,
+        'date' => $this->date,
+        'comments' => $this->comments,
+        'department_id' => $this->department_id,
+        'time_slot' => $this->timeSlot,
+    ]);
 
-        session()->flash('message', '✅ Ausencia registrada exitosamente.');
-        $this->resetForm();
-    }
+    session()->flash('message', '✅ Ausencia registrada exitosamente.');
+    $this->resetForm();
+}
+
 
 
     public function resetForm()
@@ -119,8 +121,11 @@ class UserAbsences extends Component
 
     public function getAbsencesForToday()
     {
-        return Absence::where('date', $this->date)->get();
+        return Absence::where('date', $this->date)
+                      ->where('user_id', Auth::id()) // Filtrar por usuario autenticado
+                      ->get();
     }
+    
 
     public function render()
     {
