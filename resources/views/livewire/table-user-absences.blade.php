@@ -19,16 +19,7 @@
         <div class="mb-4 p-4 border rounded bg-gray-100">
             <h3 class="font-semibold mb-2">Editar Ausencia</h3>
 
-            <!-- Campo de Usuario -->
-            <label class="block mb-2">Usuario:</label>
-            <select wire:model="userId" class="w-full border rounded p-2">
-                <option value="">Seleccionar Usuario</option>
-                @foreach (App\Models\User::all() as $user)
-                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
-            @error('userId') <span class="text-red-500">{{ $message }}</span> @enderror
-
+           
             <!-- Campo de Fecha -->
             <label class="block mt-2">Fecha:</label>
             <input type="date" wire:model="date" class="w-full border rounded p-2">
